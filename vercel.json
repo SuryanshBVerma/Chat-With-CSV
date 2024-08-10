@@ -1,10 +1,11 @@
 {
-    "build": {
-      "env": {
-        "NODE_ENV": "production"
-      },
-      "command": "pnpm install && pnpm build",
-      "outputDirectory": "out"
-    }
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/next",
+        "config": {
+          "installCommand": "pnpm install"
+        }
+      }
+    ]
   }
-  
