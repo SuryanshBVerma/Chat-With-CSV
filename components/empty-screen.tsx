@@ -49,6 +49,7 @@ export function EmptyScreen({setUrl} : {setUrl : (url : string) => void}) {
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('Failed to upload file.');
+      alert(error);
     } finally {
       setUploading(false);
     }
