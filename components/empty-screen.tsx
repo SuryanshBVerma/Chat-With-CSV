@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Bot, Loader, Upload } from 'lucide-react';
 
-export function EmptyScreen({setUrl} : {setUrl : (url : string) => void}) {
+export function EmptyScreen({ setUrl }: { setUrl: (url: string) => void }) {
 
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -36,8 +36,23 @@ export function EmptyScreen({setUrl} : {setUrl : (url : string) => void}) {
         method: "POST",
         body: formData,
       });
+      
+      console.log('Response status:', uploadResponse.status);
+      console.log('Response headers:', uploadResponse.headers);
+      const responseText = await uploadResponse.text();
+      console.log('Response body:', responseText);
 
-      const uploadData = await uploadResponse.json();
+      // Then try to parse if it looks like JSON
+      let uploadData;
+      try {
+        uploadData = JSON.parse(responseText);
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+        alert('Failed to parse server response.');
+        return;
+      }
+
+      // const uploadData = await uploadResponse.json();
 
       if (!uploadData.success) {
         throw new Error(uploadData.message || "Upload failed");
@@ -45,7 +60,7 @@ export function EmptyScreen({setUrl} : {setUrl : (url : string) => void}) {
 
       setPublicUrl(uploadData.result.secure_url);
       setUrl(uploadData.result.secure_url);
-      
+
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('Failed to upload file.');
